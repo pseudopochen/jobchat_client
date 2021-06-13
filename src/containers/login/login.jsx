@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router";
+import { connect } from "react-redux";
 import {
   WingBlank,
   NavBar,
@@ -8,9 +10,10 @@ import {
   Button,
 } from "antd-mobile";
 
+import { login } from "../../redux/actions";
 import Logo from "../../components/logo/logo";
 
-export default class Login extends Component {
+class Login extends Component {
   state = { username: "", password: "" };
 
   handleChange = (key, value) => {
@@ -18,7 +21,8 @@ export default class Login extends Component {
   };
 
   login = () => {
-    console.log(this.state);
+    //console.log(this.state);
+    this.props.login(this.state);
   };
 
   toRegister = () => {
@@ -26,12 +30,19 @@ export default class Login extends Component {
   };
 
   render() {
+    const { msg, redirectTo } = this.props.user;
+    if (redirectTo) {
+      return <Redirect to={redirectTo} />;
+    }
+
     return (
       <div>
         <NavBar>Job &nbsp; Chat</NavBar>
         <Logo />
         <WingBlank>
           <List>
+            {msg ? <div className="error-msg">{msg}</div> : null}
+            <WhiteSpace />
             <InputItem
               placeholder="Please enter username."
               onChange={(value) => this.handleChange("username", value)}
@@ -66,3 +77,5 @@ export default class Login extends Component {
     );
   }
 }
+
+export default connect((state) => ({ user: state.user }), {login})(Login);
