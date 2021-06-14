@@ -1,9 +1,21 @@
-import { reqRegister, reqLogin } from "../api";
-import { AUTH_SUCCESS, ERROR_MSG } from "./action-types";
+import { reqRegister, reqLogin, reqUpdateUser } from "../api";
+import { AUTH_SUCCESS, ERROR_MSG, RECEIVE_USER, RESET_USER } from "./action-types";
 
+
+// auth success sync action
 const authSuccess = (user) => ({ type: AUTH_SUCCESS, data: user });
+
+// error msg sync action
 const errorMsg = (msg) => ({ type: ERROR_MSG, data: msg });
 
+// receive user sync action
+const receiveUser = (user) => ({type: RECEIVE_USER, data: user});
+
+// reset user sync action
+const resetUser = (msg) => ({type: RESET_USER, data: msg});
+
+
+// register user async action
 export const register = (user) => {
   const { username, password, password2 } = user;
   if (password2 !== password) {
@@ -24,6 +36,7 @@ export const register = (user) => {
   };
 };
 
+// login async action
 export const login = (user) => {
   const { username, password } = user;
   if (!username) {
@@ -41,3 +54,15 @@ export const login = (user) => {
     }
   };
 };
+
+// update user async action
+export const updateUser = (user) => {
+  return async (dispatch) => {
+    const result = await reqUpdateUser(user);
+    if (result.code === 0) {
+      dispatch(receiveUser(result.data))
+    } else {
+      dispatch(resetUser(result.msg))
+    }
+  }
+}

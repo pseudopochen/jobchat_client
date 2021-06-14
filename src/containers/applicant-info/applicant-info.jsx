@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 import { Button, NavBar, InputItem, TextareaItem } from "antd-mobile";
 
+import { updateUser } from "../../redux/actions";
 import AvatarSelector from "../../components/avatar-selector/avatar-selector";
 
 class ApplicantInfo extends Component {
@@ -17,9 +19,16 @@ class ApplicantInfo extends Component {
 
   save = () => {
     console.log(this.state);
+    const newUser = {...this.props.user, ...this.state};
+    this.props.updateUser(newUser);
   };
 
   render() {
+    const {avatar} = this.props.user;
+    if (avatar) {
+      return <Redirect to='/applicant'/> 
+    }
+    
     return (
       <div>
         <NavBar>Applicant Info Form</NavBar>
@@ -49,4 +58,6 @@ class ApplicantInfo extends Component {
   }
 }
 
-export default connect((state) => ({}), {})(ApplicantInfo);
+export default connect((state) => ({ user: state.user }), { updateUser })(
+  ApplicantInfo
+);

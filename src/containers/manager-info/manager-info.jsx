@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 import { Button, NavBar, InputItem, TextareaItem } from "antd-mobile";
 
+import { updateUser } from "../../redux/actions";
 import AvatarSelector from "../../components/avatar-selector/avatar-selector";
 
 class ManagerInfo extends Component {
@@ -21,13 +23,21 @@ class ManagerInfo extends Component {
 
   save = () => {
     console.log(this.state);
+    const newUser = { ...this.props.user, ...this.state };
+    console.log(newUser);
+    this.props.updateUser(newUser);
   };
 
   render() {
+    const { avatar } = this.props.user;
+    if (avatar) {
+      return <Redirect to="/manager" />;
+    }
+
     return (
       <div>
         <NavBar>Manager Info Form</NavBar>
-        <AvatarSelector setAvatar={(avatar) => this.setState({avatar})} />
+        <AvatarSelector setAvatar={(avatar) => this.setState({ avatar })} />
         <InputItem
           labelNumber={10}
           placeholder="enter position info"
@@ -52,7 +62,7 @@ class ManagerInfo extends Component {
         <TextareaItem
           labelNumber={10}
           title="Position requirement:"
-          rows={3}
+          rows={2}
           onChange={(value) => this.handleChange("info", value)}
         />
         <Button type="primary" onClick={this.save}>
@@ -63,4 +73,6 @@ class ManagerInfo extends Component {
   }
 }
 
-export default connect((state) => ({}), {})(ManagerInfo);
+export default connect((state) => ({ user: state.user }), { updateUser })(
+  ManagerInfo
+);

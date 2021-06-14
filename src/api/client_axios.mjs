@@ -34,7 +34,7 @@ console.log("register result: ", result);
 // const reqLogin = (username, password) =>
 //   ajax(BASE_URL + "/login", { username, password }, "POST");
 
-result = await reqLogin("admin", "admin");
+result = await reqLogin({...result.data, password: 'admin'});
 console.log("login result:", result);
 
 // POST update
@@ -43,6 +43,7 @@ console.log("login result:", result);
 
 const user = result.data;
 user.type = "applicant";
+user.avatar = "avatar01.png";
 result = await reqUpdateUser(user);
 console.log("update result:", result);
 

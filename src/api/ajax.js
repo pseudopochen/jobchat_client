@@ -12,7 +12,7 @@ export default function ajax(url, data = {}, type = "GET") {
     p.then((result) => {
       resolve(result.data);
     }).catch((e) => {
-      alert(e.msg);
+      console.log(e.msg);
       //reject(e)
     });
   });
