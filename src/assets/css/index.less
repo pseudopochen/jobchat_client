@@ -1,5 +1,14 @@
 .error-msg {
-    color: red;
-    text-align: center;
-    font-size: 18px;
+  color: red;
+  text-align: center;
+  font-size: 18px;
+}
+.am-tab-bar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: inherit; /*default value is 100% and will cover buttons above the TabBar and make the buttons ineffective, so change it to wrap around its content tightly*/
+  .am-tab-bar-tab-title {
+    font-size: 13px;
+  }
 }

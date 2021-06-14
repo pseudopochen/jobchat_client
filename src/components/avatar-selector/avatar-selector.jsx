@@ -15,7 +15,7 @@ export default class AvatarSelector extends Component {
       let idx = String(i + 1).padStart(2, "0");
       this.avatarList.push({
         text: "avatar" + idx,
-        icon: require(`./images/avatar${idx}.png`).default, // must add .default, if not, output will be [object.moduel] on the html instead of the src path, this is due to webpack resolution rule (https://stackoverflow.com/questions/59070216/webpack-file-loader-outputs-object-module)
+        icon: require(`../../assets/avatar/avatar${idx}.png`).default, // must add .default, if not, output will be [object.moduel] on the html instead of the src path, this is due to webpack resolution rule (https://stackoverflow.com/questions/59070216/webpack-file-loader-outputs-object-module)
       });
     }
 

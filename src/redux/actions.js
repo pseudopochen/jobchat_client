@@ -1,6 +1,10 @@
-import { reqRegister, reqLogin, reqUpdateUser } from "../api";
-import { AUTH_SUCCESS, ERROR_MSG, RECEIVE_USER, RESET_USER } from "./action-types";
-
+import { reqRegister, reqLogin, reqUpdateUser, reqUser } from "../api";
+import {
+  AUTH_SUCCESS,
+  ERROR_MSG,
+  RECEIVE_USER,
+  RESET_USER,
+} from "./action-types";
 
 // auth success sync action
 const authSuccess = (user) => ({ type: AUTH_SUCCESS, data: user });
@@ -9,11 +13,10 @@ const authSuccess = (user) => ({ type: AUTH_SUCCESS, data: user });
 const errorMsg = (msg) => ({ type: ERROR_MSG, data: msg });
 
 // receive user sync action
-const receiveUser = (user) => ({type: RECEIVE_USER, data: user});
+const receiveUser = (user) => ({ type: RECEIVE_USER, data: user });
 
 // reset user sync action
-const resetUser = (msg) => ({type: RESET_USER, data: msg});
-
+export const resetUser = (msg) => ({ type: RESET_USER, data: msg });
 
 // register user async action
 export const register = (user) => {
@@ -60,9 +63,20 @@ export const updateUser = (user) => {
   return async (dispatch) => {
     const result = await reqUpdateUser(user);
     if (result.code === 0) {
-      dispatch(receiveUser(result.data))
+      dispatch(receiveUser(result.data));
     } else {
-      dispatch(resetUser(result.msg))
+      dispatch(resetUser(result.msg));
     }
-  }
-}
+  };
+};
+
+export const getUser = () => {
+  return async (dispatch) => {
+    const result = await reqUser();
+    if (result.code === 0) {
+      dispatch(receiveUser(result.data));
+    } else {
+      dispatch(resetUser(result.msg));
+    }
+  };
+};

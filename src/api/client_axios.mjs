@@ -1,4 +1,4 @@
-import {reqRegister, reqLogin, reqUpdateUser, reqDeleteUser} from './index.js'
+import {reqRegister, reqLogin, reqUpdateUser, reqDeleteUser, reqUser} from './index.js'
 
 // import axios from "axios";
 // import ajax from './ajax.js'
@@ -57,3 +57,8 @@ console.log(userID);
 
 result = await reqDeleteUser(userID);
 console.log('delete result: ', result);
+
+// GET user by id stored in cookie, !!! do not work, because cookies are stored in brower, only reqests made by browser has cookies in there.
+
+// const result1 = await reqUser()
+// console.log('get user by id in cookie: ', result1)

@@ -15,3 +15,6 @@ export const reqDeleteUser = (userID) =>
 // update user
 export const reqUpdateUser = (user) =>
   ajax(BASE_URL + "/updateUser", user, "POST");
+
+// get user by id
+export const reqUser = () => ajax(BASE_URL + "/user");
