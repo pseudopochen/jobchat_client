@@ -56,7 +56,8 @@ class Main extends Component {
           ))}
           <Route path="/managerinfo" component={ManagerInfo} />
           <Route path="/applicantinfo" component={ApplicantInfo} />
-          <Route path="/chat/:userid" component={Chat} />
+          {/* the identifier userid is used in Chat component in this.props.match.params */}
+          <Route path="/chat/:userid" component={Chat} /> 
         </Switch>
         {currentNav ? <NavFooter userType={user.type} /> : null}
       </div>

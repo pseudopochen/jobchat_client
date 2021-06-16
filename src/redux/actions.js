@@ -1,9 +1,12 @@
+import io from "socket.io-client";
 import {
   AUTH_SUCCESS,
   ERROR_MSG,
   RECEIVE_USER,
   RESET_USER,
   RECEIVE_USER_LIST,
+  RECEIVE_MSG_LIST,
+  RECEIVE_MSG,
 } from "./action-types";
 import {
   reqRegister,
@@ -11,7 +14,41 @@ import {
   reqUpdateUser,
   reqUser,
   reqUserList,
+  reqChatMsgList,
+  reqReadMsg,
 } from "../api";
+
+// create a singleton socket and store it inside io
+function initIO(dispatch, userid) {
+  if (!io.socket) {
+    io.socket = io("ws://localhost:5000");
+    io.socket.on("serverToClient", function (chatMsg) {
+      console.log("serverToClient: ", chatMsg);
+      if (userid === chatMsg.from || userid === chatMsg.to) {
+        dispatch(receiveMsg(chatMsg));
+      }
+    });
+  }
+}
+
+// get message list async action
+async function getMsgList(dispatch, userid) {
+  initIO(dispatch, userid);
+  const result = await reqChatMsgList();
+  if (result.code === 0) {
+    const { users, chatMsgs } = result.data;
+    dispatch(receiveMsgList({ users, chatMsgs }));
+  }
+}
+
+// send message from client to server async action
+export const clientToServer = ({ from, to, content }) => {
+  return async (dispatch) => {
+    console.log(from, to, content);
+    // initIO();
+    io.socket.emit("clientToServer", { from, to, content });
+  };
+};
 
 // auth success sync action
 const authSuccess = (user) => ({ type: AUTH_SUCCESS, data: user });
@@ -31,6 +68,15 @@ const receiveUserList = (userList) => ({
   data: userList,
 });
 
+// receive message list sync
+const receiveMsgList = ({ users, chatMsgs }) => ({
+  type: RECEIVE_MSG_LIST,
+  data: { users, chatMsgs },
+});
+
+// receive on message sync
+const receiveMsg = (chatMsg) => ({ type: RECEIVE_MSG, data: chatMsg });
+
 // register user async action
 export const register = (user) => {
   const { username, password, password2 } = user;
@@ -45,6 +91,7 @@ export const register = (user) => {
   return async (dispatch) => {
     const result = await reqRegister(user);
     if (result.code === 0) {
+      getMsgList(dispatch, result.data._id);
       dispatch(authSuccess(result.data));
     } else {
       dispatch(errorMsg(result.msg));
@@ -64,6 +111,7 @@ export const login = (user) => {
   return async (dispatch) => {
     const result = await reqLogin(user);
     if (result.code === 0) {
+      getMsgList(dispatch, result.data._id);
       dispatch(authSuccess(result.data));
     } else {
       dispatch(errorMsg(result.msg));
@@ -88,6 +136,7 @@ export const getUser = () => {
   return async (dispatch) => {
     const result = await reqUser();
     if (result.code === 0) {
+      getMsgList(dispatch, result.data._id);
       dispatch(receiveUser(result.data));
     } else {
       dispatch(resetUser(result.msg));
@@ -104,10 +153,3 @@ export const getUserList = (type) => {
     }
   };
 };
-
-// send message to server async action
-export const clientToServer = ({from, to, content}) => {
-  return async (dispatch) => {
-    console.log(from, to, content)
-  }
-}

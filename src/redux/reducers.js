@@ -5,7 +5,10 @@ import {
   RECEIVE_USER,
   RESET_USER,
   RECEIVE_USER_LIST,
+  RECEIVE_MSG_LIST,
+  RECEIVE_MSG,
 } from "./action-types";
+
 import { getRedirectTo } from "../utils/index";
 
 const initUser = {
@@ -32,6 +35,7 @@ function user(state = initUser, action) {
 }
 
 const initUserList = [];
+
 function userList(state = initUserList, action) {
   switch (action.type) {
     case RECEIVE_USER_LIST:
@@ -41,4 +45,27 @@ function userList(state = initUserList, action) {
   }
 }
 
-export default combineReducers({ user, userList });
+const initChat = {
+  users: {},
+  chatMsgs: [],
+  unReadCount: 0,
+};
+
+function chat(state = initChat, action) {
+  switch (action.type) {
+    case RECEIVE_MSG_LIST:
+      const { users, chatMsgs } = action.data;
+      return { users, chatMsgs, unReadCount: 0 };
+    case RECEIVE_MSG:
+      const chatMsg = action.data;
+      return {
+        users: state.users,
+        chatMsgs: [...state.chatMsgs, chatMsg],
+        unReadCount: 0,
+      };
+    default:
+      return state;
+  }
+}
+
+export default combineReducers({ user, userList, chat });

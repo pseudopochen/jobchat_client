@@ -21,3 +21,9 @@ export const reqUser = () => ajax(BASE_URL + "/user");
 
 // get user list by type
 export const reqUserList = (type) => ajax(BASE_URL + "/userlist", { type });
+
+// get message list
+export const reqChatMsgList = () => ajax("/msglist");
+
+// change message status to read: true
+export const reqReadMsg = (from) => ajax("/readmsg", { from }, "POST");
