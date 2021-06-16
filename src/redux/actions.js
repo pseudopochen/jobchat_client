@@ -1,10 +1,17 @@
-import { reqRegister, reqLogin, reqUpdateUser, reqUser } from "../api";
 import {
   AUTH_SUCCESS,
   ERROR_MSG,
   RECEIVE_USER,
   RESET_USER,
+  RECEIVE_USER_LIST,
 } from "./action-types";
+import {
+  reqRegister,
+  reqLogin,
+  reqUpdateUser,
+  reqUser,
+  reqUserList,
+} from "../api";
 
 // auth success sync action
 const authSuccess = (user) => ({ type: AUTH_SUCCESS, data: user });
@@ -17,6 +24,12 @@ const receiveUser = (user) => ({ type: RECEIVE_USER, data: user });
 
 // reset user sync action
 export const resetUser = (msg) => ({ type: RESET_USER, data: msg });
+
+// get user list sync action
+const receiveUserList = (userList) => ({
+  type: RECEIVE_USER_LIST,
+  data: userList,
+});
 
 // register user async action
 export const register = (user) => {
@@ -70,6 +83,7 @@ export const updateUser = (user) => {
   };
 };
 
+// get user from userid in cookie async action
 export const getUser = () => {
   return async (dispatch) => {
     const result = await reqUser();
@@ -80,3 +94,20 @@ export const getUser = () => {
     }
   };
 };
+
+// get user list aysnc action
+export const getUserList = (type) => {
+  return async (dispatch) => {
+    const result = await reqUserList(type);
+    if (result.code === 0) {
+      dispatch(receiveUserList(result.data));
+    }
+  };
+};
+
+// send message to server async action
+export const clientToServer = ({from, to, content}) => {
+  return async (dispatch) => {
+    console.log(from, to, content)
+  }
+}

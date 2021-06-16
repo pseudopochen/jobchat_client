@@ -4,7 +4,7 @@ export default function ajax(url, data = {}, type = "GET") {
   return new Promise((resolve, reject) => {
     let p;
     if (type === "GET") {
-      console.log('axios get')
+      //console.log('axios get')
       p = axios.get(url, { params: data });
     } else {
       p = axios.post(url, data);

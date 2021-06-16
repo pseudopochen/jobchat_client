@@ -18,3 +18,6 @@ export const reqUpdateUser = (user) =>
 
 // get user by id
 export const reqUser = () => ajax(BASE_URL + "/user");
+
+// get user list by type
+export const reqUserList = (type) => ajax(BASE_URL + "/userlist", { type });
