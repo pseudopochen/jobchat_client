@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { NavBar, List, InputItem, Grid, Icon } from "antd-mobile";
-import { clientToServer } from "../../redux/actions";
+import QueAnim from "rc-queue-anim";
+import { clientToServer, readMsg } from "../../redux/actions";
 
 const Item = List.Item;
 
@@ -76,6 +77,12 @@ class Chat extends Component {
     window.scrollTo(0, document.body.scrollHeight);
   }
 
+  componentWillUnmount() {
+    const from = this.props.match.params.userid;
+    const to = this.props.user._id;
+    this.props.readMsg(from, to);
+  }
+
   render() {
     const { user } = this.props;
     const { users, chatMsgs } = this.props.chat;
@@ -105,21 +112,23 @@ class Chat extends Component {
           {users[targetId].username}
         </NavBar>
         <List style={{ marginTop: 50, marginBottom: 50 }}>
-          {msgs.map((msg) => {
-            if (targetId === msg.from) {
-              return (
-                <Item key={msg._id} thumb={targetIcon}>
-                  {msg.content}
-                </Item>
-              );
-            } else {
-              return (
-                <Item key={msg._id} className="chat-me" extra="me">
-                  {msg.content}
-                </Item>
-              );
-            }
-          })}
+          {/* <QueAnim type="left"> */}
+            {msgs.map((msg) => {
+              if (targetId === msg.from) {
+                return (
+                  <Item key={msg._id} thumb={targetIcon}>
+                    {msg.content}
+                  </Item>
+                );
+              } else {
+                return (
+                  <Item key={msg._id} className="chat-me" extra="me">
+                    {msg.content}
+                  </Item>
+                );
+              }
+            })}
+          {/* </QueAnim> */}
         </List>
         <div className="am-tab-bar">
           <InputItem
@@ -131,7 +140,8 @@ class Chat extends Component {
               <span>
                 <span onClick={this.toggleShow} style={{ marginRight: 5 }}>
                   😊
-                </span>{" "}
+                </span>
+                {""}
                 <span onClick={this.handleSend}>Send</span>
               </span>
             }
@@ -155,4 +165,5 @@ class Chat extends Component {
 
 export default connect((state) => ({ user: state.user, chat: state.chat }), {
   clientToServer,
+  readMsg,
 })(Chat);

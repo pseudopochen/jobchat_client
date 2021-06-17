@@ -30,14 +30,14 @@ class Main extends Component {
     }
     this.userid = userid;
 
-    const { user } = this.props;
+    const { user, unReadCount } = this.props;
     if (!user._id) {
       return null;
     } else {
       let path = this.props.location.pathname;
       if (path === "/") {
         path = getRedirectTo(user.type, user.avatar);
-        console.log('path: ', path);
+        console.log("path: ", path);
         return <Redirect to={path} />;
       }
     }
@@ -57,12 +57,15 @@ class Main extends Component {
           <Route path="/managerinfo" component={ManagerInfo} />
           <Route path="/applicantinfo" component={ApplicantInfo} />
           {/* the identifier userid is used in Chat component in this.props.match.params */}
-          <Route path="/chat/:userid" component={Chat} /> 
+          <Route path="/chat/:userid" component={Chat} />
         </Switch>
-        {currentNav ? <NavFooter userType={user.type} /> : null}
+        {currentNav ? <NavFooter userType={user.type} unReadCount={unReadCount}/> : null}
       </div>
     );
   }
 }
 
-export default connect((state) => ({ user: state.user }), { getUser })(Main);
+export default connect(
+  (state) => ({ user: state.user, unReadCount: state.chat.unReadCount }),
+  { getUser }
+)(Main);

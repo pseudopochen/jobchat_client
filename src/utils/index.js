@@ -55,9 +55,44 @@ export function getNavList(userType = "") {
     return [navList[0], ...navList.slice(2)];
   }
   return navList.slice(1);
-};
+}
 
 export function inNavList(path) {
   return navList.find((nav) => nav.path === path);
-};
+}
 
+export function getLastMsgs(chatMsgs) {
+  const lastMsgObj = {};
+  chatMsgs.forEach((msg) => {
+    const chatId = msg.chat_id;
+    if (!lastMsgObj[chatId]) {
+      lastMsgObj[chatId] = msg;
+    } else {
+      if (msg.create_time > lastMsgObj[chatId].create_time) {
+        lastMsgObj[chatId] = msg;
+      }
+    }
+  });
+
+  const lastMsgs = Object.values(lastMsgObj);
+  lastMsgs.sort((m1, m2) => m2.create_time - m1.create_time);
+
+  return lastMsgs;
+}
+
+export function getUnReadCount(chatMsgs, userid) {
+  let totalUnRead = 0;
+  const unreadCount = {};
+  chatMsgs.forEach((msg) => {
+    if (msg.to === userid && !msg.read) {
+      totalUnRead++;
+      const chatId = msg.chat_id;
+      if (!unreadCount[chatId]) {
+        unreadCount[chatId] = 1;
+      } else {
+        unreadCount[chatId]++;
+      }
+    }
+  });
+  return { unreadCount, totalUnRead };
+}
