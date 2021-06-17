@@ -1,70 +1,22 @@
-# Getting Started with Create React App
+# jobchat a chatting app to connect job applicants with hiring managers
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is the front-end of the app. The back-end is in a separate repository named "jobchat_server", which is built on Node, Express, Mongoose and Socket.io.
 
-## Available Scripts
+The front-end of this app is built using React-17, Ant-Design-Mobile (antd-mobile), Redux, Axios and Socket.io. 
 
-In the project directory, you can run:
+The user interface is designed for mobile devices and implemented using "antd-mobile". 
 
-### `npm start`
+New users will go through a registration page, which collects a user name, password and does validation, and then a secondary information collection page, which allows the new user to pick an "avatar" image, describe their skills (for job applicants) or background information (e.g., salary) related to the position (for managers).
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+For returning users, the client-side code handles auto-login using a cookie. For job applicants, the main page after login is a list of all hiring managers (with brief info about unfilled positions). For hiring managers, the main page after login is a list of job applicants.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Each applicant/manager on the main page can be tapped to start the messaging page, which allows entering emojis. If both sides of the chat are online, the messages are displayed right away. If one side of the chat is off-line, the messages are stored in the database with the "unread" flag. The total number of unread messages are queried and displayed to the user the next time the user logs in.
 
-### `npm test`
+Accesses to the database are handled by dispatching async actions and the results of the database accesses are stored in two redux states: "user" and "chat". 
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The "user" state stores information (e.g., user id assigned by MongoDB, path to the avatar image) for the current user.
 
-### `npm run build`
+The "chat" state stores information about all chat messages relavant to the current user, who is either the sender or the receiver of the message. 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
